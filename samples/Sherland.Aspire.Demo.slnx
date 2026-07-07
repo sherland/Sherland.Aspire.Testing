@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Sherland.Aspire.AppHost/Sherland.Aspire.AppHost.csproj" />
+  <Project Path="Sherland.Aspire.DemoApi/Sherland.Aspire.DemoApi.csproj" />
+  <Project Path="Sherland.Aspire.DemoTests/Sherland.Aspire.DemoTests.csproj" />
+</Solution>

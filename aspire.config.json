@@ -1,0 +1,6 @@
+{
+  "appHost": {
+    "language": "csharp",
+    "path": "samples/Sherland.Aspire.AppHost/Sherland.Aspire.AppHost.csproj"
+  }
+}

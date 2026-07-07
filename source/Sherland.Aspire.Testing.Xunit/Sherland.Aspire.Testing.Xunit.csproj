@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet package identity -->
+    <IsPackable>true</IsPackable>
+    <PackageId>Sherland.Aspire.Testing.Xunit</PackageId>
+    <Version>1.0.0</Version>
+    <VersionSuffix>alpha.1</VersionSuffix>
+    <Authors>Steinar Herland</Authors>
+    <Copyright>Copyright © Steinar Herland</Copyright>
+
+    <!-- NuGet package discovery -->
+    <Description>
+      xUnit v3 integration helpers for .NET Aspire distributed-application tests.
+      Provides [AspireFact] and [AspireTheory] attributes that automatically buffer
+      Aspire resource logs, resource state, and Playwright browser console output
+      during every test run and flush the buffer to the test console only when
+      a test fails — keeping passing-test output silent.
+      OtelTraceCapture verifies OTEL trace spans — root-span counts, parent/child
+      shape, and error status — for both direct API calls and browser interactions
+      via the Aspire dashboard's REST API, and doubles as the source for automatic
+      span/log counts and OTLP JSON artefact files on test failure.
+    </Description>
+    <PackageTags>aspire xunit xunit-v3 testing integration diagnostics playwright dotnet-aspire ai skills</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- XML IntelliSense docs for package consumers -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Suppress CS1591 on the public-but-internal xUnit infrastructure types
+         (discoverers, test-case classes) that consumers never instantiate directly. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <!-- Debug symbols shipped as a .snupkg alongside the main package -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Include README in the package root -->
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <!-- Embed package skills so NuGet skill discovery tools can load them -->
+    <None Include="skills/**" Pack="true" PackagePath="skills/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Testing" Version="13.4.6" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.61.0" />
+    <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
+  </ItemGroup>
+
+</Project>
+
