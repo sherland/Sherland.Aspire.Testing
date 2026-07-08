@@ -35,8 +35,4 @@ if (-not $playwrightScript) {
     }
 }
 
-if ($IsLinux) {
-    sudo pwsh $playwrightScript.FullName install --with-deps chromium
-} else {
-    pwsh $playwrightScript.FullName install --with-deps chromium
-}
+pwsh $playwrightScript.FullName install --with-deps chromium
