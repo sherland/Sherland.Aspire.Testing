@@ -32,8 +32,4 @@
     <ProjectReference Include="..\..\source\Sherland.Aspire.Testing.Xunit\Sherland.Aspire.Testing.Xunit.csproj" />
   </ItemGroup>
 
-  <Target Name="InstallPlaywrightChromium" BeforeTargets="VSTest" Condition="Exists('$(TargetDir)playwright.ps1')">
-    <Exec Command="pwsh -NoProfile -ExecutionPolicy Bypass -File &quot;$(TargetDir)playwright.ps1&quot; install chromium" />
-  </Target>
-
 </Project>
