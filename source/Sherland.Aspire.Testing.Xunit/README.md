@@ -18,6 +18,20 @@ No `Console.WriteLine` in test code. No manual log wiring. No grepping CI output
 
 ---
 
+## Contents
+
+- [Requirements](#requirements)
+- [Getting started](#getting-started)
+- [Tracking browser console output (Playwright)](#tracking-browser-console-output-playwright)
+- [Verifying traces — API calls and browser interactions, one API](#verifying-traces--api-calls-and-browser-interactions-one-api)
+- [What failure output looks like](#what-failure-output-looks-like)
+- [Controlling which tests run](#controlling-which-tests-run)
+- [AI skills in this package](#ai-skills-in-this-package)
+- [API reference](#api-reference)
+- [Implementation internals](#implementation-internals)
+
+---
+
 ## Requirements
 
 | Dependency | Minimum version |
@@ -218,7 +232,7 @@ Traces = EnableTraceCapture(_app)
 
 `ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS` is a shortcut that sets `Dashboard:Frontend:AuthMode`, `Dashboard:Otlp:AuthMode`, and `Dashboard:Api:AuthMode` all to `Unsecured` — appropriate for local test runs (per Aspire's own guidance, not for anything publicly reachable). If you set it in the fixture as shown above (rather than in the AppHost itself — see below), clear it afterward in a `finally` block so it doesn't leak into unrelated processes started later in the same session.
 
-The sample takes a slightly different, arguably better approach: it sets this (and the browser OTLP wiring below) **unconditionally at the top of the AppHost's own `Program.cs`**, not in the test fixture — since `DistributedApplicationTestingBuilder` executes that same top-level code, one place covers both normal `aspire run` usage and tests. See `samples/Sherland.Aspire.AppHost/Program.cs` and `samples/Sherland.Aspire.DemoTests/DemoFixture.cs` for the full working pattern.
+The sample takes a slightly different, arguably better approach: it sets this (and the browser OTLP wiring below) **unconditionally at the top of the AppHost's own `Program.cs`**, not in the test fixture — since `DistributedApplicationTestingBuilder` executes that same top-level code, one place covers both normal `aspire run` usage and tests. See [samples/Sherland.Aspire.AppHost/Program.cs](https://github.com/sherland/Sherland.Aspire.Testing/blob/main/samples/Sherland.Aspire.AppHost/Program.cs) and [samples/Sherland.Aspire.DemoTests/DemoFixture.cs](https://github.com/sherland/Sherland.Aspire.Testing/blob/main/samples/Sherland.Aspire.DemoTests/DemoFixture.cs) for the full working pattern.
 
 Optionally, also lower the OTLP batch exporter's export delay on your backend project resources so spans reach the dashboard promptly instead of waiting on its ~5s default, both for snappier feedback and so `WaitForAsync` isn't racing that interval:
 
@@ -228,7 +242,7 @@ var api = builder.AddProject<Projects.MyApi>("api")
     .WithEnvironment("OTEL_BSP_SCHEDULE_DELAY", "200");
 ```
 
-**Browser-originated spans need one more step.** The dashboard's OTLP/HTTP endpoint isn't configured by default when launched via the AppHost (only OTLP/gRPC is) — and when it *is* explicitly requested, a test-hosted `DistributedApplicationTestingBuilder` run doesn't reliably bind the exact port requested, so there's no way to hand the browser a working endpoint up front. That's exactly why `AttachBrowserCaptureAsync` exists (below): it intercepts the browser's outgoing export directly, so it works regardless of whether that export ever reaches a real destination. **If you also want a developer to see browser traces in the dashboard UI itself** (outside of tests, running the app normally), wire a dedicated OTLP/HTTP endpoint into the AppHost unconditionally — see `samples/Sherland.Aspire.AppHost/Program.cs` for a complete, verified example (dynamic free port, `ASPIRE_ALLOW_UNSECURED_TRANSPORT`, and `Dashboard:Otlp:Cors`).
+**Browser-originated spans need one more step.** The dashboard's OTLP/HTTP endpoint isn't configured by default when launched via the AppHost (only OTLP/gRPC is) — and when it *is* explicitly requested, a test-hosted `DistributedApplicationTestingBuilder` run doesn't reliably bind the exact port requested, so there's no way to hand the browser a working endpoint up front. That's exactly why `AttachBrowserCaptureAsync` exists (below): it intercepts the browser's outgoing export directly, so it works regardless of whether that export ever reaches a real destination. **If you also want a developer to see browser traces in the dashboard UI itself** (outside of tests, running the app normally), wire a dedicated OTLP/HTTP endpoint into the AppHost unconditionally — see [samples/Sherland.Aspire.AppHost/Program.cs](https://github.com/sherland/Sherland.Aspire.Testing/blob/main/samples/Sherland.Aspire.AppHost/Program.cs) for a complete, verified example (dynamic free port, `ASPIRE_ALLOW_UNSECURED_TRANSPORT`, and `Dashboard:Otlp:Cors`).
 
 Asserting a direct API call produces exactly one root span:
 
@@ -489,5 +503,7 @@ A fixed-capacity thread-safe circular buffer. When the buffer is full, the oldes
 
 ## Implementation internals
 
-For a detailed explanation of the xUnit v3 extensibility points used — custom test-case discoverers, `ISelfExecutingXunitTestCase`, the `XunitTestCaseRunnerBase` + `XunitTestRunner.OnTestFailed` pipeline, `AsyncLocal<T>` scoping for per-test browser event isolation, and the ring-buffer design — see [docs/internals.md](docs/internals.md).
+For a detailed explanation of the xUnit v3 extensibility points used — custom test-case discoverers, `ISelfExecutingXunitTestCase`, the `XunitTestCaseRunnerBase` + `XunitTestRunner.OnTestFailed` pipeline, `AsyncLocal<T>` scoping for per-test browser event isolation, and the ring-buffer design — see [docs/internals.md](https://github.com/sherland/Sherland.Aspire.Testing/blob/main/source/Sherland.Aspire.Testing.Xunit/docs/internals.md).
+
+> This file is not packed into the NuGet package — the link above always points at GitHub regardless of where this README is being viewed from (nuget.org, GitHub Packages, or a text editor after extracting the `.nupkg`).
 
