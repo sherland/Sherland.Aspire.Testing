@@ -8,10 +8,12 @@
     <!-- NuGet package identity -->
     <IsPackable>true</IsPackable>
     <PackageId>Sherland.Aspire.Testing.Xunit</PackageId>
-    <Version>1.0.0</Version>
-    <VersionSuffix>alpha.1</VersionSuffix>
     <Authors>Steinar Herland</Authors>
     <Copyright>Copyright © Steinar Herland</Copyright>
+    <RepositoryUrl>https://github.com/sherland/Sherland.Aspire.Testing</RepositoryUrl>
+
+    <!-- Automatic versioning from git tags/height via MinVer -->
+    <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
 
     <!-- NuGet package discovery -->
     <Description>
@@ -38,6 +40,11 @@
     <!-- Debug symbols shipped as a .snupkg alongside the main package -->
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- SourceLink: let consumers step into this package's source on GitHub while debugging -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,6 +58,8 @@
     <PackageReference Include="Aspire.Hosting.Testing" Version="13.4.6" />
     <PackageReference Include="Microsoft.Playwright" Version="1.61.0" />
     <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.300" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
