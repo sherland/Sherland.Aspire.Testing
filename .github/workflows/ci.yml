@@ -49,7 +49,10 @@ jobs:
           if [ "$BRANCH" = "main" ]; then
             echo "args=" >> "$GITHUB_OUTPUT"
           else
-            echo "args=-p:MinVerVersionOverride=0.0.0-alpha-$BRANCH.$SHORT_SHA" >> "$GITHUB_OUTPUT"
+            # SemVer pre-release identifiers only allow [0-9A-Za-z-], so sanitize
+            # branch names like "docs/foo" or "feature/bar" before using them here.
+            SAFE_BRANCH=$(echo "$BRANCH" | sed 's/[^0-9A-Za-z-]/-/g')
+            echo "args=-p:MinVerVersionOverride=0.0.0-alpha-$SAFE_BRANCH.$SHORT_SHA" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Pack Sherland.Aspire.Testing.Xunit
