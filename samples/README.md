@@ -14,7 +14,9 @@ Projects:
 1. Install frontend dependencies:
    - `cd samples/Sherland.Aspire.Demo.Ui.React`
    - `npm ci`
-2. Run the full sample tests:
+2. Install the Playwright Chromium browser (first run only, or after a Playwright version
+   bump): `pwsh scripts/Install-PlaywrightDependencies.ps1` from the repo root.
+3. Run the full sample tests:
    - `cd samples`
    - `dotnet test Sherland.Aspire.DemoTests/Sherland.Aspire.DemoTests.csproj -c Debug -v minimal`
 
