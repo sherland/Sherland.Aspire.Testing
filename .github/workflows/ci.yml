@@ -9,8 +9,13 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -35,10 +40,23 @@ jobs:
       - name: Run tests
         run: dotnet test samples/Sherland.Aspire.DemoTests/Sherland.Aspire.DemoTests.csproj -c Debug -v minimal --no-build
 
+      - name: Resolve MinVer pre-release override
+        id: minver
+        run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          if [ "$BRANCH" = "main" ]; then
+            echo "args=" >> "$GITHUB_OUTPUT"
+          else
+            echo "args=-p:MinVerVersionOverride=0.0.0-alpha-$BRANCH" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Pack Sherland.Aspire.Testing.Xunit
-        run: dotnet pack source/Sherland.Aspire.Testing.Xunit/Sherland.Aspire.Testing.Xunit.csproj -c Release -o artifacts/nuget
+        run: dotnet pack source/Sherland.Aspire.Testing.Xunit/Sherland.Aspire.Testing.Xunit.csproj -c Release -o artifacts/nuget ${{ steps.minver.outputs.args }}
 
       - uses: actions/upload-artifact@v4
         with:
           name: nuget-packages
           path: artifacts/nuget/*.*nupkg
+
+      - name: Push Sherland.Aspire.Testing.Xunit to GitHub Packages
+        run: dotnet nuget push artifacts/nuget/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/sherland/index.json --skip-duplicate
