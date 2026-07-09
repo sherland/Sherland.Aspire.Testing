@@ -2,6 +2,8 @@
 
 This folder contains self-contained Aspire samples for `Sherland.Aspire.Testing.Xunit`.
 
+Prerequisites: .NET 10 SDK, Node 20, and the Playwright Chromium browser (installed below).
+
 Projects:
 
 - `Sherland.Aspire.AppHost` - Aspire AppHost wiring API and React UI

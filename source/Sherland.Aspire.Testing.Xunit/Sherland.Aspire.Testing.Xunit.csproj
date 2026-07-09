@@ -11,6 +11,7 @@
     <Authors>Steinar Herland</Authors>
     <Copyright>Copyright © Steinar Herland</Copyright>
     <RepositoryUrl>https://github.com/sherland/Sherland.Aspire.Testing</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sherland/Sherland.Aspire.Testing</PackageProjectUrl>
 
     <!-- Automatic versioning from git tags/height via MinVer -->
     <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
