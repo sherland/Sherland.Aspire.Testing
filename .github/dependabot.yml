@@ -1,14 +1,13 @@
 version: 2
 updates:
   # .NET packages (Sherland.Aspire.Testing.Xunit + samples)
-  # No root .sln/.csproj exists, so each project directory must be listed
-  # explicitly; Dependabot's nuget discovery is non-recursive from "directory".
+  # /samples has Sherland.Aspire.Demo.slnx, which Dependabot expands into its
+  # 3 projects. Sherland.Aspire.Testing.Xunit isn't part of that solution, so
+  # it needs its own entry (nuget discovery is non-recursive per directory).
   - package-ecosystem: "nuget"
     directories:
       - "/source/Sherland.Aspire.Testing.Xunit"
-      - "/samples/Sherland.Aspire.AppHost"
-      - "/samples/Sherland.Aspire.DemoApi"
-      - "/samples/Sherland.Aspire.DemoTests"
+      - "/samples"
     schedule:
       interval: "daily"
     cooldown:
