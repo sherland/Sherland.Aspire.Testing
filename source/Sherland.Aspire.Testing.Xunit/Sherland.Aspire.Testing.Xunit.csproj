@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/sherland/Sherland.Aspire.Testing</PackageProjectUrl>
 
     <!-- Automatic versioning from git tags/height via MinVer -->
-    <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
+    <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
 
     <!-- NuGet package discovery -->
     <Description>
