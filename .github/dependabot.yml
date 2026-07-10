@@ -10,6 +10,9 @@ updates:
       - "/samples"
     schedule:
       interval: "daily"
+    groups:
+      nuget-dependencies:
+        patterns: ["*"]
     cooldown:
       default-days: 3
       semver-patch-days: 3
@@ -17,10 +20,16 @@ updates:
       semver-major-days: 30
 
   # React sample UI
+  # Grouped into one PR so interdependent packages (react/react-dom/@types,
+  # vite/@vitejs-plugin-react) update together instead of splitting across
+  # PRs and breaking peer-dependency resolution (npm ci ERESOLVE).
   - package-ecosystem: "npm"
     directory: "/samples/Sherland.Aspire.Demo.Ui.React"
     schedule:
       interval: "daily"
+    groups:
+      npm-dependencies:
+        patterns: ["*"]
     cooldown:
       default-days: 3
       semver-patch-days: 3
@@ -34,5 +43,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    groups:
+      github-actions:
+        patterns: ["*"]
     cooldown:
       default-days: 3
