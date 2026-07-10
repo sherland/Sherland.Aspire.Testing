@@ -1,0 +1,39 @@
+version: 2
+updates:
+  # .NET packages (Sherland.Aspire.Testing.Xunit + samples)
+  # /samples has Sherland.Aspire.Demo.slnx, which Dependabot expands into its
+  # 3 projects. Sherland.Aspire.Testing.Xunit isn't part of that solution, so
+  # it needs its own entry (nuget discovery is non-recursive per directory).
+  - package-ecosystem: "nuget"
+    directories:
+      - "/source/Sherland.Aspire.Testing.Xunit"
+      - "/samples"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 3
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 30
+
+  # React sample UI
+  - package-ecosystem: "npm"
+    directory: "/samples/Sherland.Aspire.Demo.Ui.React"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 3
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 30
+
+  # GitHub Actions used in CI workflow
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 3
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 30
