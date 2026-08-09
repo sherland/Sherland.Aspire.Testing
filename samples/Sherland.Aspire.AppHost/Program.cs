@@ -22,6 +22,12 @@ var api = builder.AddProject<Projects.Sherland_Aspire_DemoApi>("demo-api")
 
 var ui = builder.AddViteApp("demo-ui", "../Sherland.Aspire.Demo.Ui.React")
     .WithReference(api)
+    // AddViteApp defaults NODE_ENV to "production" even in run mode, which makes Vite's
+    // isProduction (derived straight from process.env.NODE_ENV, not the dev/build command)
+    // true. @vitejs/plugin-react then skips injecting its Fast Refresh preamble while still
+    // emitting the `$RefreshSig$()` call in transformed components, so every page load throws
+    // "ReferenceError: $RefreshSig$ is not defined" and browser tests never see rendered UI.
+    .WithEnvironment("NODE_ENV", "development")
     .WithEnvironment("VITE_API_BASE_URL", api.GetEndpoint("http"))
     .WithEnvironment("VITE_OTEL_EXPORTER_OTLP_ENDPOINT", otlpHttpEndpointUrl);
 
